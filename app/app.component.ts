@@ -1,5 +1,6 @@
-import {Component} from 'angular2/core';
+import {Component,OnInit} from 'angular2/core';
 import {Hero} from './hero';
+import {HeroService} from './hero.service';
 import {HeroDetailComponent} from './hero-detail.component';
 
 
@@ -14,15 +15,27 @@ import {HeroDetailComponent} from './hero-detail.component';
     </ul>
     <my-hero-detail [hero]="selectedHero"></my-hero-detail>
     `,
-  directives: [HeroDetailComponent]
+  directives: [HeroDetailComponent],
+  providers: [HeroService]
 })
 
 
-export class AppComponent {
+export class AppComponent implements OnInit {
     public title = "Tour of Heroes";
-    public heroes = HEROES;
+    public heroes: Hero[];
     selectedHero: Hero;
+    constructor(private _heroService: HeroService) { }
     onSelect(hero: Hero) { this.selectedHero = hero; }
+    
+    
+    getHeroes() {
+        this._heroService.getHeroes().then(heroes => this.heroes = heroes);
+    }
+    
+    ngOnInit() {
+        this.getHeroes();
+    }
+    
   }
   
   
